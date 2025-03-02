@@ -1,6 +1,10 @@
+import { useMemo } from "react"
 
-export default function Header({cart,removeFromCart,increaseQuantity,decreaseQuantity,clearCart,isEmpty,cartTotal}) {
+export default function Header({cart,dispatch}) {
     
+    const isEmpty = useMemo(() => cart.length === 0,[cart])
+    const cartTotal = useMemo(() => cart.reduce((total,item)=>total+(item.quantity*item.price),0),[cart])
+
     return (
         <header className="py-5 header">
         <div className="container-xl">
@@ -43,7 +47,7 @@ export default function Header({cart,removeFromCart,increaseQuantity,decreaseQua
                                                 <button
                                                     type="button"
                                                     className="btn btn-dark"
-                                                    onClick={()=>decreaseQuantity(guitar.id)}
+                                                    onClick={()=>dispatch({type:'decrease-quantity',payload:{id:guitar.id}})}
                                                 >
                                                     -
                                                 </button>
@@ -51,7 +55,7 @@ export default function Header({cart,removeFromCart,increaseQuantity,decreaseQua
                                                 <button
                                                     type="button"
                                                     className="btn btn-dark"
-                                                    onClick={()=>increaseQuantity(guitar.id)}
+                                                    onClick={()=>dispatch({type:'increase-quantity',payload:{id:guitar.id}})}
                                                 >
                                                     +
                                                 </button>
@@ -60,7 +64,7 @@ export default function Header({cart,removeFromCart,increaseQuantity,decreaseQua
                                                 <button
                                                 className="btn btn-danger"
                                                 type="button"
-                                                onClick={()=>removeFromCart(guitar.id)}
+                                                onClick={()=>dispatch({type:'remove-from-cart',payload:{id:guitar.id}})}
                                                 >
                                                 X
                                                 </button>
@@ -71,7 +75,7 @@ export default function Header({cart,removeFromCart,increaseQuantity,decreaseQua
                                         </tbody>
                                     </table>
                                     <p className="text-end">Total pagar: <span className="fw-bold">${cartTotal}</span></p>
-                                    <button className="btn btn-dark w-100 mt-3 p-2" onClick={clearCart}>Vaciar Carrito</button>
+                                    <button className="btn btn-dark w-100 mt-3 p-2" onClick={()=>dispatch({type:'clear-cart'})}>Vaciar Carrito</button>
                                 </>
                                 
                             )}
